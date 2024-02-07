@@ -96,10 +96,10 @@ variable "eks_volume_iops" {
   default     = 3000
 }
 
-variable "eks_node_additional_iam_roles" {
+variable "eks_node_additional_policies" {
   description = "Additional policies to attach to the EKS worker nodes IAM role"
-  type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"]
+  type        = map(string)
+  default = {}
 }
 
 variable "eks_ng_min_size" {

@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = ">= 19.21.0"
+  version = "19.21.0"
 
   cluster_name                    = var.eks_cluster_name
   cluster_version                 = var.eks_cluster_version
@@ -40,7 +40,7 @@ module "eks" {
 
     iam_role_attach_cni_policy = true
 
-    iam_role_additional_policies = var.eks_node_additional_iam_roles
+    iam_role_additional_policies = var.eks_node_additional_policies
 
     block_device_mappings = {
       xvda = {
