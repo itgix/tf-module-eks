@@ -110,7 +110,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     eks_workers = {
-      name         = "${var.eks_cluster_name}-node-group"
+      name         = "${var.eks_cluster_name}-ng"
       min_size     = var.eks_ng_min_size
       max_size     = var.eks_ng_max_size
       desired_size = var.eks_ng_desired_size
@@ -127,7 +127,7 @@ module "eks" {
       subnet_ids            = var.subnet_ids
       capacity_type         = var.eks_ng_capacity_type
       create_security_group = true
-      security_group_name   = "${var.eks_cluster_name}-node-group-sg"
+      security_group_name   = "${var.eks_cluster_name}-ng-sg"
     }
   }
 

@@ -16,8 +16,6 @@ module "vpc_cni_irsa" {
       namespace_service_accounts = ["kube-system:aws-node"]
     }
   }
-
-  tags = var.eks_tags
 }
 
 #################################
@@ -38,7 +36,6 @@ module "irsa-ebs-csi" {
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
-  tags = var.eks_tags
 }
 
 #####################################
@@ -59,13 +56,11 @@ module "iam_assumable_role_admin_secrets_operator" {
       namespace_service_accounts = ["external-secrets-operator:external-secrets-operator-sa"]
     }
   }
-  tags = var.eks_tags
 }
 
 resource "aws_iam_policy" "secrets_operator" {
   name_prefix = "${var.eks_cluster_name}-secrets-operator-policy"
   description = "EKS external-secrets-operator  policy for cluster ${data.aws_eks_cluster.this.id}"
-  tags        = var.eks_tags
   policy      = <<EOT
 {
     "Version": "2012-10-17",
@@ -107,14 +102,12 @@ module "iam_assumable_role_admin_aws_load_balancer_controller" {
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller-sa"]
     }
   }
-  tags = var.eks_tags
 }
 
 resource "aws_iam_policy" "aws_load_balancer_controller" {
 
   name_prefix = "aws-load-balancer-controller"
   description = "EKS aws-load-balancer-controller policy for cluster ${data.aws_eks_cluster.this.id}"
-  tags        = var.eks_tags
   policy      = <<EOT
 {
     "Version": "2012-10-17",
