@@ -49,15 +49,6 @@ module "eks" {
       type        = "ingress"
       self        = true
     }
-    # rule for metrics server v1beta1.metrics.k8s.io apiservice
-    ingress_allow_metrics_webhook_access_from_control_plane = {
-      type                          = "ingress"
-      protocol                      = "tcp"
-      from_port                     = 4443
-      to_port                       = 4443
-      source_cluster_security_group = true
-      description                   = "Allow access from control plane to webhook ports"
-    }
     egress_all = {
       description      = "Node all egress"
       protocol         = "-1"
