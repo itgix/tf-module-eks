@@ -49,6 +49,7 @@ module "eks" {
       type        = "ingress"
       self        = true
     }
+  }
 
   cluster_ip_family          = "ipv4"
   create_cni_ipv6_iam_policy = false
