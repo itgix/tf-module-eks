@@ -60,7 +60,7 @@ module "iam_assumable_role_admin_secrets_operator" {
 
 resource "aws_iam_policy" "secrets_operator" {
   name_prefix = "${var.eks_cluster_name}-secrets-operator-policy"
-  description = "EKS external-secrets-operator  policy for cluster ${data.aws_eks_cluster.this.id}"
+  description = "EKS external-secrets-operator  policy for cluster ${var.eks_cluster_name}"
   policy      = <<EOT
 {
     "Version": "2012-10-17",
@@ -107,7 +107,7 @@ module "iam_assumable_role_admin_aws_load_balancer_controller" {
 resource "aws_iam_policy" "aws_load_balancer_controller" {
 
   name_prefix = "aws-load-balancer-controller"
-  description = "EKS aws-load-balancer-controller policy for cluster ${data.aws_eks_cluster.this.id}"
+  description = "EKS aws-load-balancer-controller policy for cluster ${var.eks_cluster_name}"
   policy      = <<EOT
 {
     "Version": "2012-10-17",
