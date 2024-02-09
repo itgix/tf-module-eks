@@ -75,7 +75,7 @@ resource "aws_iam_policy" "secrets_operator" {
                 "secretsmanager:ListSecretVersionIds"
             ],
             "Resource": [
-                "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:/${var.eks_cluster_name}/*",
+                "*"
             ]
         }
     ]
