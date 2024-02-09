@@ -47,18 +47,39 @@ variable "eks_cluster_name" {
 variable "eks_cluster_version" {
   type        = string
   description = "Desired Kubernetes cluster version"
+  default     = "1.29"
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "CIDRs with access to the EKS cluster. Restricted to Actico and ITGix"
+  type        = list(string)
+  default     = ["83.228.107.50/32", "3.74.142.105/32"]
+}
+
+variable "cluster_enabled_log_types" {
+  description = "Log types for CloudWatch logs export from EKS"
+  type        = list(string)
+  default     = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 }
 
 variable "cluster_log_retention_in_days" {
   type        = number
   description = "Cluster log retention in days"
+  default     = 30
 }
+
 variable "addons_versions" {
   type = object({
     kube_proxy = string
     vpc_cni    = string
     coredns    = string
+    ebs_csi    = string
   })
+}
+
+variable "eks_tags" {
+  type    = map(string)
+  default = {}
 }
 
 
@@ -99,7 +120,11 @@ variable "eks_volume_iops" {
 variable "eks_node_additional_policies" {
   description = "Additional policies to attach to the EKS worker nodes IAM role"
   type        = map(string)
-  default = {}
+  default = {
+    AmazonSSMManagedInstanceCore       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    AmazonRoute53FullAccess            = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
+  }
 }
 
 variable "eks_ng_min_size" {
