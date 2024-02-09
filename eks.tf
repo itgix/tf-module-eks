@@ -140,39 +140,13 @@ module "eks" {
       groups   = ["system:masters"]
     },
     {
-      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/administrator-access"
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-administrator-access"
       username = "eks-admin"
       groups   = ["system:masters"]
     }
   ]
 
-  aws_auth_users = [
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/user2"
-      username = "user2"
-      groups   = ["system:masters"]
-    }
-  ]
+  aws_auth_users = var.eks_aws_auth_users
 
   tags = var.eks_tags
 }

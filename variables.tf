@@ -53,7 +53,7 @@ variable "eks_cluster_version" {
 variable "cluster_endpoint_public_access_cidrs" {
   description = "CIDRs with access to the EKS cluster. Restricted to Actico and ITGix"
   type        = list(string)
-  default     = ["83.228.107.50/32", "3.74.142.105/32"]
+  default     = ["0.0.0.0/0"]
 }
 
 variable "cluster_enabled_log_types" {
@@ -65,7 +65,7 @@ variable "cluster_enabled_log_types" {
 variable "cluster_log_retention_in_days" {
   type        = number
   description = "Cluster log retention in days"
-  default     = 30
+  default     = 14
 }
 
 variable "addons_versions" {
@@ -75,6 +75,12 @@ variable "addons_versions" {
     coredns    = string
     ebs_csi    = string
   })
+}
+
+variable "eks_aws_auth_users" {
+  description = "List of user maps to add to the aws-auth configmap"
+  type        = list(any)
+  default     = []
 }
 
 variable "eks_tags" {
