@@ -8,7 +8,7 @@ module "eks" {
   cluster_endpoint_public_access       = true
   cluster_endpoint_public_access_cidrs = var.cluster_endpoint_public_access_cidrs
   cluster_security_group_name          = "${var.eks_cluster_name}-sg"
-  enable_irsa                           = true
+  enable_irsa                          = true
 
   ## Control plane logging
   create_cloudwatch_log_group            = true
@@ -124,8 +124,8 @@ module "eks" {
         instance_metadata_tags      = "disabled"
       }
 
-      subnet_ids    = var.subnet_ids
-      capacity_type = var.eks_ng_capacity_type
+      subnet_ids            = var.subnet_ids
+      capacity_type         = var.eks_ng_capacity_type
       create_security_group = true
       security_group_name   = "${var.eks_cluster_name}-node-group-sg"
     }

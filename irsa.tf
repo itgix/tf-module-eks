@@ -2,7 +2,7 @@
 #IRSA for VPC-CNI addon for EKS #
 #################################
 module "vpc_cni_irsa" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
   role_name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
@@ -24,13 +24,13 @@ module "vpc_cni_irsa" {
 #IRSA for EBS-CSI addon for EKS #
 #################################
 module "irsa-ebs-csi" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
-  create_role                   = true
-  role_name                     = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
-  role_policy_arns              = {
-      ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  create_role = true
+  role_name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
+  role_policy_arns = {
+    ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   }
   oidc_providers = {
     main = {
@@ -38,20 +38,20 @@ module "irsa-ebs-csi" {
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
-  tags                          = var.eks_tags
+  tags = var.eks_tags
 }
 
 #####################################
 #IRSA for External Secrets Operator #
 #####################################
 module "iam_assumable_role_admin_secrets_operator" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
-  create_role                   = true
-  role_name                     = "${var.eks_cluster_name}-secrets-operator"
-  role_policy_arns              = {
-      eso_policy = aws_iam_policy.secrets_operator.arn
+  create_role = true
+  role_name   = "${var.eks_cluster_name}-secrets-operator"
+  role_policy_arns = {
+    eso_policy = aws_iam_policy.secrets_operator.arn
   }
   oidc_providers = {
     main = {
@@ -59,7 +59,7 @@ module "iam_assumable_role_admin_secrets_operator" {
       namespace_service_accounts = ["external-secrets-operator:external-secrets-operator-sa"]
     }
   }
-  tags                          = var.eks_tags
+  tags = var.eks_tags
 }
 
 resource "aws_iam_policy" "secrets_operator" {
@@ -93,13 +93,13 @@ EOT
 ##########################
 module "iam_assumable_role_admin_aws_load_balancer_controller" {
 
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
-  create_role                   = true
-  role_name                     = "aws-load-balancer-controller-${var.eks_cluster_name}"
-  role_policy_arns              = {
-      alb_controller_policy = aws_iam_policy.aws_load_balancer_controller.arn
+  create_role = true
+  role_name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
+  role_policy_arns = {
+    alb_controller_policy = aws_iam_policy.aws_load_balancer_controller.arn
   }
   oidc_providers = {
     main = {
@@ -107,7 +107,7 @@ module "iam_assumable_role_admin_aws_load_balancer_controller" {
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller-sa"]
     }
   }
-  tags                          = var.eks_tags
+  tags = var.eks_tags
 }
 
 resource "aws_iam_policy" "aws_load_balancer_controller" {
