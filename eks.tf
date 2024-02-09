@@ -49,16 +49,6 @@ module "eks" {
       type        = "ingress"
       self        = true
     }
-    egress_all = {
-      description      = "Node all egress"
-      protocol         = "-1"
-      from_port        = 0
-      to_port          = 0
-      type             = "egress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-  }
 
   cluster_ip_family          = "ipv4"
   create_cni_ipv6_iam_policy = false
