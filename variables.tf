@@ -128,8 +128,6 @@ variable "eks_node_additional_policies" {
   type        = map(string)
   default = {
     AmazonSSMManagedInstanceCore       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-    AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-    AmazonRoute53FullAccess            = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
   }
 }
 
