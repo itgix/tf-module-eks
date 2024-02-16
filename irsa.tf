@@ -58,6 +58,26 @@ module "iam_assumable_role_admin_secrets_operator" {
   }
 }
 
+########################
+#IRSA for External DNS #
+########################
+module "iam_assumable_role_external_dns" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.34.0"
+
+  create_role = true
+  role_name   = "${var.eks_cluster_name}-external-dns"
+  role_policy_arns = {
+    external_dns_policy = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
+  }
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["external-dns:external-dns-sa"]
+    }
+  }
+}
+
 resource "aws_iam_policy" "secrets_operator" {
   name_prefix = "${var.eks_cluster_name}-secrets-operator-policy"
   description = "EKS external-secrets-operator  policy for cluster ${var.eks_cluster_name}"
