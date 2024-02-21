@@ -154,3 +154,15 @@ variable "eks_ng_capacity_type" {
   type        = string
   default     = "SPOT"
 }
+
+variable "enable_default_policy" {
+  description = "Specifies whether to enable the default key policy. Defaults to `true`"
+  type        = bool
+  default     = true
+}
+
+variable "kms_key_users" {
+  description = "A list of IAM ARNs for [key users](https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#key-policy-default-allow-users)"
+  type        = list(string)
+  default     = []
+}
