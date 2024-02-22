@@ -126,6 +126,9 @@ module "eks" {
   aws_auth_users = var.eks_aws_auth_users
 
   tags = var.eks_tags
+  enable_default_policy = var.enable_default_policy
+  kms_key_users  = var.kms_key_users
+
 }
 
 resource "aws_eks_addon" "ebs-csi" {
