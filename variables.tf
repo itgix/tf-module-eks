@@ -155,7 +155,7 @@ variable "eks_ng_capacity_type" {
   default     = "SPOT"
 }
 
-variable "enable_default_policy" {
+variable "kms_key_enable_default_policy" {
   description = "Specifies whether to enable the default key policy. Defaults to `true`"
   type        = bool
   default     = true
