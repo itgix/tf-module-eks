@@ -77,6 +77,12 @@ variable "addons_versions" {
   })
 }
 
+variable "eks_aws_auth_roles" {
+  description = "List of user maps to add to the aws-auth configmap"
+  type        = list(any)
+  default     = []
+}
+
 variable "eks_aws_auth_users" {
   description = "List of user maps to add to the aws-auth configmap"
   type        = list(any)

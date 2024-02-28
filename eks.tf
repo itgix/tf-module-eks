@@ -110,18 +110,7 @@ module "eks" {
 
   manage_aws_auth_configmap = true
 
-  aws_auth_roles = [
-    {
-      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-role"
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups   = ["system:masters"]
-    },
-    {
-      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-administrator-access"
-      username = "eks-admin"
-      groups   = ["system:masters"]
-    }
-  ]
+  aws_auth_roles = var.eks_aws_auth_roles
 
   aws_auth_users = var.eks_aws_auth_users
 
