@@ -97,6 +97,12 @@ resource "aws_iam_policy" "secrets_operator" {
             "Resource": [
                 "*"
             ]
+        },
+        {
+            "Sid": "KMSDecrypt",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": ${jsonencode(var.secrets_kms_key_arns)}
         }
     ]
 }

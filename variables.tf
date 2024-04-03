@@ -172,3 +172,7 @@ variable "kms_key_users" {
   type        = list(string)
   default     = []
 }
+variable "secrets_kms_key_arns" {
+  description = "List of Customer Managed KMS Key ARNs for the external secrets service account IAM policy"
+  type        = list(string)
+}
