@@ -23,16 +23,19 @@ variable "environment" {
 variable "vpc_id" {
   type        = string
   description = "VPC id where EKS is deployed"
+  default     = ""
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "List of subnet ids for worker nodes"
+  default     = [""]
 }
 
 variable "control_plane_subnet_ids" {
   type        = list(string)
   description = "List of subnet ids for control plane"
+  default     = [""]
 }
 
 ################################################################################
@@ -77,11 +80,23 @@ variable "addons_versions" {
   })
 }
 
-variable "eks_aws_auth_users" {
-  description = "List of user maps to add to the aws-auth configmap"
-  type        = list(any)
-  default     = []
+variable "eks_aws_auth_roles" {
+  type    = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
 }
+
+variable "eks_aws_auth_users" {
+  type    = list(object({
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
 
 variable "eks_tags" {
   type    = map(string)
