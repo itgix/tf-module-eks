@@ -120,7 +120,7 @@ module "eks" {
 
   aws_auth_users = [
     for user in var.eks_aws_auth_users : {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/users/${user["username"]}"
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user${var.eks_aws_users_path}${user["username"]}"
       username = user["username"]
       groups   = user["groups"]
     }
