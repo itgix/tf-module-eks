@@ -11,7 +11,7 @@ module "karpenter" {
   cluster_name              = module.eks.cluster_name
   queue_name                = local.karpenter_queue_name
   queue_managed_sse_enabled = true
-  iam_role_arn              = module.eks.eks_managed_node_groups["main"].iam_role_arn
+  iam_role_arn              = module.eks.eks_managed_node_groups["eks_workers"].iam_role_arn
   create_iam_role           = false
 
   enable_karpenter_instance_profile_creation = true
