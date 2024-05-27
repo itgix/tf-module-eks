@@ -126,9 +126,9 @@ module "eks" {
     }
   ]
 
-  tags = var.eks_tags
+  tags                          = var.eks_tags
   kms_key_enable_default_policy = var.kms_key_enable_default_policy
-  kms_key_users  = var.kms_key_users
+  kms_key_users                 = var.kms_key_users
 
 }
 
