@@ -81,7 +81,7 @@ variable "addons_versions" {
 }
 
 variable "eks_aws_auth_roles" {
-  type    = list(object({
+  type = list(object({
     rolearn  = string
     username = string
     groups   = list(string)
@@ -90,7 +90,7 @@ variable "eks_aws_auth_roles" {
 }
 
 variable "eks_aws_auth_users" {
-  type    = list(object({
+  type = list(object({
     username = string
     groups   = list(string)
   }))
@@ -147,7 +147,7 @@ variable "eks_node_additional_policies" {
   description = "Additional policies to attach to the EKS worker nodes IAM role"
   type        = map(string)
   default = {
-    AmazonSSMManagedInstanceCore       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   }
 }
 
