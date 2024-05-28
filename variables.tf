@@ -190,14 +190,3 @@ variable "secrets_kms_key_arns" {
   description = "List of Customer Managed KMS Key ARNs for the external secrets service account IAM policy"
   type        = list(string)
 }
-
-################################################################################
-# Karpenter
-################################################################################
-
-variable "ec2_spot_service_role" {
-  type        = bool
-  default     = false
-  description = "Configure EC2 spot service role provisioning."
-}
-
