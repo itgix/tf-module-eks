@@ -36,6 +36,18 @@ output "oidc_provider_arn" {
   value       = module.eks.oidc_provider_arn
 }
 
+output "subnet1_id" {
+  value = data.aws_subnet.subnet1.id
+}
+
+output "subnet2_id" {
+  value = data.aws_subnet.subnet2.id
+}
+
+output "subnet3_id" {
+  value = data.aws_subnet.subnet3.id
+}
+
 output "az1" {
   value = data.aws_subnet.subnet1.availability_zone
 }
