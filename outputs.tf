@@ -27,8 +27,12 @@ output "node_security_group_id" {
   value       = module.eks.node_security_group_id
 }
 
-output "node_iam_role" {
+output "node_iam_role_name" {
   value = module.eks.eks_managed_node_groups["eks_workers"].iam_role_name
+}
+
+output "node_iam_role_arn" {
+  value = module.eks.eks_managed_node_groups["eks_workers"].iam_role_arn
 }
 
 output "oidc_provider_arn" {
