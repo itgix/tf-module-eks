@@ -148,6 +148,7 @@ variable "eks_node_additional_policies" {
   type        = map(string)
   default = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    AWSAppSyncPushToCloudWatchLogs = "arn:aws:iam::aws:policy/service-role/AWSAppSyncPushToCloudWatchLogs"
   }
 }
 
