@@ -10,6 +10,9 @@ module "eks" {
   cluster_security_group_name          = "${var.eks_cluster_name}-sg"
   enable_irsa                          = true
 
+  # TODO: Remove when upgrading to v21
+  enable_cluster_creator_admin_permissions = true
+
   ## Control plane logging
   create_cloudwatch_log_group            = true
   cluster_enabled_log_types              = var.cluster_enabled_log_types
