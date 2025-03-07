@@ -11,7 +11,7 @@ module "eks" {
   enable_irsa                          = true
 
   # TODO: Remove when upgrading to v21
-  enable_cluster_creator_admin_permissions = true
+  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
 
   ## Control plane logging
   create_cloudwatch_log_group            = true
