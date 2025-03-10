@@ -147,4 +147,6 @@ module "eks_aws_auth" {
       groups   = user["groups"]
     }
   ]
+
+  depends_on = [module.eks]
 }
