@@ -85,7 +85,7 @@ variable "eks_tags" {
   default = {}
 }
 
-variable "eks_cluster_admins" {
+variable "cluster_admins" {
   type = list(
     object({
       username = string
