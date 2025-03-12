@@ -1,7 +1,7 @@
 locals {
   eks_cluster_admin_entries = {
     for admin in var.cluster_admins : admin.username => {
-      principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${admin.path}/${admin.username}"
+      principal_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user${admin.path}${admin.username}"
       type          = "STANDARD"
       policy_associations = {
         admin = {
