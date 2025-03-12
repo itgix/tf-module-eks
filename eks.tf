@@ -10,8 +10,7 @@ module "eks" {
   cluster_security_group_name          = "${var.eks_cluster_name}-sg"
   enable_irsa                          = true
 
-  # TODO: Remove when upgrading to v21
-  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
+  access_entries = local.merged_access_entries
 
   ## Control plane logging
   create_cloudwatch_log_group            = true
@@ -124,29 +123,4 @@ resource "aws_eks_addon" "ebs-csi" {
     var.eks_tags,
     tomap({ eks_addon = "ebs_csi" })
   )
-}
-
-module "eks_aws_auth" {
-  source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
-  version = "20.31.6"
-
-  manage_aws_auth_configmap = true
-
-  aws_auth_roles = [
-    for role in var.eks_aws_auth_roles : {
-      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${role["rolearn"]}"
-      username = role["username"]
-      groups   = role["groups"]
-    }
-  ]
-
-  aws_auth_users = [
-    for user in var.eks_aws_auth_users : {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user${var.eks_aws_users_path}${user["username"]}"
-      username = user["username"]
-      groups   = user["groups"]
-    }
-  ]
-
-  depends_on = [module.eks]
 }
