@@ -80,34 +80,26 @@ variable "addons_versions" {
   })
 }
 
-variable "eks_aws_auth_roles" {
-  type = list(object({
-    rolearn  = string
-    username = string
-    groups   = list(string)
-  }))
-  default = []
-}
-
-variable "eks_aws_auth_users" {
-  type = list(object({
-    username = string
-    groups   = list(string)
-  }))
-  default = []
-}
-
-variable "eks_aws_users_path" {
-  type        = string
-  description = "The organizational path of the user used for building the arn , by default it's just / "
-  default     = "/"
-}
-
 variable "eks_tags" {
   type    = map(string)
   default = {}
 }
 
+variable "cluster_admins" {
+  type = list(
+    object({
+      username = string
+      path     = optional(string, "/users/")
+    })
+  )
+  default = []
+}
+
+variable "access_entries" {
+  type        = any
+  description = "Map of access entries to add to the cluster"
+  default     = {}
+}
 
 ################################################################################
 # Node group defaults 
