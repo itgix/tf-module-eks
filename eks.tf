@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.21.0"
+  version = "20.31.6"
 
   cluster_name                         = var.eks_cluster_name
   cluster_version                      = var.eks_cluster_version
@@ -10,6 +10,8 @@ module "eks" {
   cluster_security_group_name          = "${var.eks_cluster_name}-sg"
   enable_irsa                          = true
 
+  access_entries = local.merged_access_entries
+
   ## Control plane logging
   create_cloudwatch_log_group            = true
   cluster_enabled_log_types              = var.cluster_enabled_log_types
@@ -17,14 +19,12 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      addon_version     = var.addons_versions.coredns
-      resolve_conflicts = "OVERWRITE"
+      addon_version = var.addons_versions.coredns
     }
     kube-proxy = {
       addon_version = var.addons_versions.kube_proxy
     }
     vpc-cni = {
-      resolve_conflicts        = "OVERWRITE"
       service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
     }
   }
@@ -107,24 +107,6 @@ module "eks" {
       security_group_name   = "${var.eks_cluster_name}-ng-sg"
     }
   }
-
-  manage_aws_auth_configmap = true
-
-  aws_auth_roles = [
-    for role in var.eks_aws_auth_roles : {
-      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${role["rolearn"]}"
-      username = role["username"]
-      groups   = role["groups"]
-    }
-  ]
-
-  aws_auth_users = [
-    for user in var.eks_aws_auth_users : {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user${var.eks_aws_users_path}${user["username"]}"
-      username = user["username"]
-      groups   = user["groups"]
-    }
-  ]
 
   tags                          = var.eks_tags
   kms_key_enable_default_policy = var.kms_key_enable_default_policy
