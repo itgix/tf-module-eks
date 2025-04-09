@@ -16,6 +16,11 @@ variable "environment" {
   description = "Environment in which resources are deployed"
 }
 
+variable "project_name" {
+  type        = string
+  description = "Name of the project / client / product to be used in naming convention"
+}
+
 ################################################################################
 # Networking variables
 ################################################################################
