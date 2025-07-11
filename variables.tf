@@ -21,6 +21,12 @@ variable "project_name" {
   description = "Name of the project / client / product to be used in naming convention"
 }
 
+variable "allow_long_names" {
+  type        = string
+  default     = true
+  description = "Allows longer IAM role names without suffixes. Leave true for new clusters. Set to false for pre-existing clusters to avoid re-creation."
+}
+
 ################################################################################
 # Networking variables
 ################################################################################
