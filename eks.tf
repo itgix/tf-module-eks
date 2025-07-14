@@ -2,6 +2,8 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.31.6"
 
+  iam_role_use_name_prefix = !var.allow_long_names
+
   cluster_name                         = var.eks_cluster_name
   cluster_version                      = var.eks_cluster_version
   cluster_endpoint_private_access      = true
@@ -87,6 +89,8 @@ module "eks" {
 
   eks_managed_node_groups = {
     eks_workers = {
+      iam_role_use_name_prefix = !var.allow_long_names
+
       name         = "${var.eks_cluster_name}-ng"
       min_size     = var.eks_ng_min_size
       max_size     = var.eks_ng_max_size
