@@ -114,7 +114,7 @@ variable "access_entries" {
 variable "eks_ami_type" {
   description = "Default AMI type for the EKS worker nodes"
   type        = string
-  default     = "AL2_x86_64"
+  default     = "BOTTLEROCKET_x86_64"
 }
 
 variable "eks_disk_size" {
