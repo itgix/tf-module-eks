@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "20.31.6"
+  version = "21.10.1"
 
   iam_role_use_name_prefix = !var.allow_long_names
 
