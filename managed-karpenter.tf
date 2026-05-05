@@ -55,6 +55,14 @@ spec:
         values:
         - on-demand
         - spot
+%{if length(var.karpenter_allowed_instance_types) > 0~}
+      - key: node.kubernetes.io/instance-type
+        operator: In
+        values:
+%{for instance in var.karpenter_allowed_instance_types~}
+        - ${instance}
+%{endfor~}
+%{endif~}
 YAML
 }
 
