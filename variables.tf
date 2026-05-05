@@ -118,3 +118,9 @@ variable "secrets_kms_key_arns" {
   description = "List of Customer Managed KMS Key ARNs for the external secrets service account IAM policy"
   type        = list(string)
 }
+
+variable "karpenter_allowed_instance_types" {
+  description = "Optional list of instance types allowed for Karpenter auto-mode NodePool. If not provided, no instance type restrictions are applied."
+  type        = list(string)
+  default     = []
+}
