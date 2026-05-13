@@ -19,17 +19,26 @@ module "eks" {
   cluster_enabled_log_types              = var.cluster_enabled_log_types
   cloudwatch_log_group_retention_in_days = var.cluster_log_retention_in_days
 
-  cluster_addons = {
-    coredns = {
-      addon_version = var.addons_versions.coredns
-    }
-    kube-proxy = {
-      addon_version = var.addons_versions.kube_proxy
-    }
-    vpc-cni = {
-      service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
-    }
-  }
+  cluster_addons = merge(
+    {
+      coredns = {
+        addon_version = var.addons_versions.coredns
+      }
+      kube-proxy = {
+        addon_version = var.addons_versions.kube_proxy
+      }
+      vpc-cni = {
+        service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
+      }
+    },
+    var.enable_efs_csi ? {
+      aws-efs-csi-driver = {
+        addon_version            = var.addons_versions.efs_csi
+        service_account_role_arn = module.irsa-efs-csi.iam_role_arn
+        tags                     = tomap({ eks_addon = "efs_csi" })
+      }
+    } : {}
+  )
 
   cluster_security_group_additional_rules = {
     egress_nodes_ephemeral_ports_tcp = {

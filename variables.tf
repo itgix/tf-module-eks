@@ -77,13 +77,25 @@ variable "cluster_log_retention_in_days" {
   default     = 14
 }
 
+variable "enable_efs_csi" {
+  type        = bool
+  description = "Enable EFS CSI EKS managed addon and its IRSA role"
+  default     = false
+}
+
 variable "addons_versions" {
   type = object({
     kube_proxy = string
     vpc_cni    = string
     coredns    = string
     ebs_csi    = string
+    efs_csi    = optional(string)
   })
+
+  validation {
+    condition     = !var.enable_efs_csi || try(length(trimspace(var.addons_versions.efs_csi)) > 0, false)
+    error_message = "When enable_efs_csi is true, addons_versions.efs_csi must be set to a non-empty string."
+  }
 }
 
 variable "eks_tags" {
