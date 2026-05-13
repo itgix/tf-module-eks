@@ -38,6 +38,26 @@ module "irsa-ebs-csi" {
   }
 }
 
+#################################
+#IRSA for EFS-CSI addon for EKS #
+#################################
+module "irsa-efs-csi" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.34.0"
+
+  create_role = var.enable_efs_csi
+  role_name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
+  role_policy_arns = {
+    efs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+  }
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:efs-csi-controller-sa"]
+    }
+  }
+}
+
 #####################################
 #IRSA for External Secrets Operator #
 #####################################
