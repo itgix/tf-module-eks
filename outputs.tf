@@ -28,11 +28,17 @@ output "node_security_group_id" {
 }
 
 output "node_iam_role_name" {
-  value = module.eks.eks_managed_node_groups["eks_workers"].iam_role_name
+  description = "Name of the IAM role used by EKS worker nodes"
+  value = var.enable_eks_auto_mode ? module.eks.node_iam_role_name : (
+    module.eks.eks_managed_node_groups["eks_workers"].iam_role_name
+  )
 }
 
 output "node_iam_role_arn" {
-  value = module.eks.eks_managed_node_groups["eks_workers"].iam_role_arn
+  description = "ARN of the IAM role used by EKS worker nodes"
+  value = var.enable_eks_auto_mode ? module.eks.node_iam_role_arn : (
+    module.eks.eks_managed_node_groups["eks_workers"].iam_role_arn
+  )
 }
 
 output "oidc_provider_arn" {
