@@ -2,7 +2,8 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.31.6"
 
-  iam_role_use_name_prefix = !var.allow_long_names
+  iam_role_use_name_prefix      = !var.allow_long_names
+  node_iam_role_use_name_prefix = !var.allow_long_names
 
   cluster_name                         = var.eks_cluster_name
   cluster_version                      = var.eks_cluster_version
@@ -20,7 +21,7 @@ module "eks" {
   cloudwatch_log_group_retention_in_days = var.cluster_log_retention_in_days
 
   cluster_addons = merge(
-    {
+    var.enable_eks_auto_mode ? {} : {
       coredns = {
         addon_version = var.addons_versions.coredns
       }
@@ -39,6 +40,10 @@ module "eks" {
       }
     } : {}
   )
+
+  cluster_compute_config = var.enable_eks_auto_mode ? {
+    enabled = true
+  } : {}
 
   cluster_security_group_additional_rules = {
     egress_nodes_ephemeral_ports_tcp = {
@@ -96,7 +101,7 @@ module "eks" {
     }
   }
 
-  eks_managed_node_groups = {
+  eks_managed_node_groups = var.enable_eks_auto_mode ? {} : {
     eks_workers = {
       iam_role_use_name_prefix = !var.allow_long_names
 
@@ -127,7 +132,14 @@ module "eks" {
 
 }
 
+moved {
+  from = aws_eks_addon.ebs-csi
+  to   = aws_eks_addon.ebs-csi[0]
+}
+
 resource "aws_eks_addon" "ebs-csi" {
+  count = var.enable_eks_auto_mode ? 0 : 1
+
   cluster_name             = module.eks.cluster_name
   addon_name               = "aws-ebs-csi-driver"
   addon_version            = var.addons_versions.ebs_csi

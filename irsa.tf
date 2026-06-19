@@ -5,6 +5,7 @@ module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
+  create_role           = !var.enable_eks_auto_mode
   role_name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv6   = false
@@ -25,7 +26,7 @@ module "irsa-ebs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
 
-  create_role = true
+  create_role = !var.enable_eks_auto_mode
   role_name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
   role_policy_arns = {
     ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
