@@ -102,6 +102,7 @@ module "eks" {
       },
       var.eks_additional_block_device_mappings
     )
+  }
 
   eks_managed_node_groups = var.enable_eks_auto_mode ? {} : {
     eks_workers = {
