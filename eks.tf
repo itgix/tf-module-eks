@@ -86,20 +86,22 @@ module "eks" {
 
     iam_role_additional_policies = var.eks_node_additional_policies
 
-    block_device_mappings = {
-      xvda = {
-        device_name = "/dev/xvda"
-        ebs = {
-          volume_size           = var.eks_disk_size
-          volume_type           = var.eks_volume_type
-          iops                  = var.eks_volume_iops
-          throughput            = 150
-          encrypted             = true
-          delete_on_termination = true
-        }
+block_device_mappings = merge(
+  {
+    xvda = {
+      device_name = "/dev/xvda"
+      ebs = {
+        volume_size           = var.eks_disk_size
+        volume_type           = var.eks_volume_type
+        iops                  = var.eks_volume_iops
+        throughput            = 150
+        encrypted             = true
+        delete_on_termination = true
       }
     }
-  }
+  },
+  var.eks_additional_block_device_mappings
+)
 
   eks_managed_node_groups = var.enable_eks_auto_mode ? {} : {
     eks_workers = {

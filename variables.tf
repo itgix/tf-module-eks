@@ -211,6 +211,22 @@ variable "eks_ng_capacity_type" {
   default     = "SPOT"
 }
 
+variable "eks_additional_block_device_mappings" {
+  description = "Additional block device mappings for EKS worker nodes"
+  type = map(object({
+    device_name = string
+    ebs = object({
+      volume_size           = number
+      volume_type           = string
+      iops                  = optional(number)
+      throughput            = optional(number, 150)
+      encrypted             = optional(bool, true)
+      delete_on_termination = optional(bool, true)
+    })
+  }))
+  default = {}
+}
+
 variable "karpenter_allowed_instance_types" {
   description = "Optional instance types allowed by the EKS Auto Mode NodePool; an empty list applies no instance type restriction"
   type        = list(string)
