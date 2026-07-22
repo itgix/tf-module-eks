@@ -96,13 +96,14 @@ variable "enable_efs_csi" {
 }
 
 variable "addons_versions" {
-  description = "Versions of the standard EKS add-ons; required when EKS Auto Mode is disabled"
+  description = "Configuration of the standard EKS add-ons; versions are required when EKS Auto Mode is disabled"
   type = object({
-    kube_proxy = optional(string)
-    vpc_cni    = optional(string)
-    coredns    = optional(string)
-    ebs_csi    = optional(string)
-    efs_csi    = optional(string)
+    kube_proxy                  = optional(string)
+    vpc_cni                     = optional(string)
+    coredns                     = optional(string)
+    ebs_csi                     = optional(string)
+    efs_csi                     = optional(string)
+    resolve_conflicts_on_create = optional(string, "OVERWRITE")
   })
   default = null
 
@@ -121,6 +122,11 @@ variable "addons_versions" {
   validation {
     condition     = !var.enable_efs_csi || try(length(trimspace(var.addons_versions.efs_csi)) > 0, false)
     error_message = "enable_efs_csi requires a non-empty efs_csi version."
+  }
+
+  validation {
+    condition     = try(contains(["NONE", "OVERWRITE"], var.addons_versions.resolve_conflicts_on_create), true)
+    error_message = "addons_versions.resolve_conflicts_on_create must be one of: NONE, OVERWRITE."
   }
 }
 
