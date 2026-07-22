@@ -38,6 +38,7 @@ module "eks" {
       }
       vpc-cni = {
         addon_version            = var.addons_versions.vpc_cni
+        before_compute           = true
         service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
 
         resolve_conflicts_on_create = var.addons_versions.resolve_conflicts_on_create
@@ -165,4 +166,8 @@ resource "aws_eks_addon" "ebs-csi" {
     var.eks_tags,
     tomap({ eks_addon = "ebs_csi" })
   )
+
+  depends_on = [
+    module.eks
+  ]
 }
