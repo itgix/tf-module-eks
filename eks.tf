@@ -161,7 +161,7 @@ resource "aws_eks_addon" "ebs-csi" {
   cluster_name             = module.eks.cluster_name
   addon_name               = "aws-ebs-csi-driver"
   addon_version            = var.addons_versions.ebs_csi
-  service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
+  service_account_role_arn = module.irsa-ebs-csi.arn
   tags = merge(
     var.eks_tags,
     tomap({ eks_addon = "ebs_csi" })
