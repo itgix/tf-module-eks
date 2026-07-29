@@ -19,7 +19,7 @@ output "eks_cluster_version" {
 }
 
 output "eks_irsa_external_dns_arn" {
-  value = module.iam_assumable_role_external_dns.iam_role_arn
+  value = module.iam_assumable_role_external_dns.arn
 }
 
 output "node_security_group_id" {
