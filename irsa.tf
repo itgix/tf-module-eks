@@ -2,7 +2,7 @@
 #IRSA for VPC-CNI addon for EKS #
 #################################
 module "vpc_cni_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
   create_role           = !var.enable_eks_auto_mode
@@ -23,7 +23,7 @@ module "vpc_cni_irsa" {
 #IRSA for EBS-CSI addon for EKS #
 #################################
 module "irsa-ebs-csi" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
   create_role = !var.enable_eks_auto_mode
@@ -43,7 +43,7 @@ module "irsa-ebs-csi" {
 #IRSA for EFS-CSI addon for EKS #
 #################################
 module "irsa-efs-csi" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
   create_role = var.enable_efs_csi
@@ -63,7 +63,7 @@ module "irsa-efs-csi" {
 #IRSA for External Secrets Operator #
 #####################################
 module "iam_assumable_role_admin_secrets_operator" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
   create_role = true
@@ -83,7 +83,7 @@ module "iam_assumable_role_admin_secrets_operator" {
 #IRSA for External DNS #
 ########################
 module "iam_assumable_role_external_dns" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
   create_role = true
@@ -135,7 +135,7 @@ EOT
 ##########################
 module "iam_assumable_role_admin_aws_load_balancer_controller" {
 
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "5.34.0"
 
   create_role = true
