@@ -7,6 +7,8 @@ module "vpc_cni_irsa" {
 
   create           = !var.enable_eks_auto_mode
   name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
+  use_name_prefix  = false
+
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv6   = false
   vpc_cni_enable_ipv4   = true
@@ -28,6 +30,9 @@ module "irsa-ebs-csi" {
 
   create = !var.enable_eks_auto_mode
   name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
+
+  use_name_prefix  = false
+
   policies = {
     ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   }
@@ -48,6 +53,9 @@ module "irsa-efs-csi" {
 
   create = var.enable_efs_csi
   name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
+
+  use_name_prefix  = false
+
   policies = {
     efs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
   }
@@ -68,6 +76,9 @@ module "iam_assumable_role_admin_secrets_operator" {
 
   create = true
   name   = "${var.eks_cluster_name}-secrets-operator"
+
+  use_name_prefix  = false
+
   policies = {
     eso_policy = aws_iam_policy.secrets_operator.arn
   }
@@ -88,6 +99,9 @@ module "iam_assumable_role_external_dns" {
 
   create = true
   name   = "${var.eks_cluster_name}-external-dns"
+
+  use_name_prefix  = false
+
   policies = {
     external_dns_policy = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
   }
@@ -140,6 +154,9 @@ module "iam_assumable_role_admin_aws_load_balancer_controller" {
 
   create = true
   name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
+
+  use_name_prefix  = false
+
   policies = {
     alb_controller_policy = aws_iam_policy.aws_load_balancer_controller.arn
   }
