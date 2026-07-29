@@ -136,7 +136,7 @@ EOT
 module "iam_assumable_role_admin_aws_load_balancer_controller" {
 
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create = true
   name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
