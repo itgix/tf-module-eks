@@ -5,8 +5,8 @@ module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create_role           = !var.enable_eks_auto_mode
-  role_name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
+  create           = !var.enable_eks_auto_mode
+  name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv6   = false
   vpc_cni_enable_ipv4   = true
@@ -26,9 +26,9 @@ module "irsa-ebs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create_role = !var.enable_eks_auto_mode
-  role_name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
-  role_policy_arns = {
+  create = !var.enable_eks_auto_mode
+  name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
+  policies = {
     ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   }
   oidc_providers = {
@@ -46,9 +46,9 @@ module "irsa-efs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create_role = var.enable_efs_csi
-  role_name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
-  role_policy_arns = {
+  create = var.enable_efs_csi
+  name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
+  policies = {
     efs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
   }
   oidc_providers = {
@@ -66,9 +66,9 @@ module "iam_assumable_role_admin_secrets_operator" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create_role = true
-  role_name   = "${var.eks_cluster_name}-secrets-operator"
-  role_policy_arns = {
+  create = true
+  name   = "${var.eks_cluster_name}-secrets-operator"
+  policies = {
     eso_policy = aws_iam_policy.secrets_operator.arn
   }
   oidc_providers = {
@@ -86,9 +86,9 @@ module "iam_assumable_role_external_dns" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create_role = true
-  role_name   = "${var.eks_cluster_name}-external-dns"
-  role_policy_arns = {
+  create = true
+  name   = "${var.eks_cluster_name}-external-dns"
+  policies = {
     external_dns_policy = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
   }
   oidc_providers = {
@@ -138,9 +138,9 @@ module "iam_assumable_role_admin_aws_load_balancer_controller" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "5.34.0"
 
-  create_role = true
-  role_name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
-  role_policy_arns = {
+  create = true
+  name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
+  policies = {
     alb_controller_policy = aws_iam_policy.aws_load_balancer_controller.arn
   }
   oidc_providers = {
