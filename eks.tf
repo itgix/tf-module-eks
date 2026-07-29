@@ -39,7 +39,7 @@ module "eks" {
       vpc-cni = {
         addon_version            = var.addons_versions.vpc_cni
         before_compute           = true
-        service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
+        service_account_role_arn = module.vpc_cni_irsa.arn
 
         resolve_conflicts_on_create = var.addons_versions.resolve_conflicts_on_create
       }
@@ -47,7 +47,7 @@ module "eks" {
     var.enable_efs_csi ? {
       aws-efs-csi-driver = {
         addon_version            = var.addons_versions.efs_csi
-        service_account_role_arn = module.irsa-efs-csi.iam_role_arn
+        service_account_role_arn = module.irsa-ebs-csi.arn
         tags                     = tomap({ eks_addon = "efs_csi" })
 
         resolve_conflicts_on_create = var.addons_versions.resolve_conflicts_on_create
