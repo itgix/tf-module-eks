@@ -3,7 +3,7 @@
 #################################
 module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create_role           = !var.enable_eks_auto_mode
   role_name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
@@ -24,7 +24,7 @@ module "vpc_cni_irsa" {
 #################################
 module "irsa-ebs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create_role = !var.enable_eks_auto_mode
   role_name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
@@ -44,7 +44,7 @@ module "irsa-ebs-csi" {
 #################################
 module "irsa-efs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create_role = var.enable_efs_csi
   role_name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
@@ -64,7 +64,7 @@ module "irsa-efs-csi" {
 #####################################
 module "iam_assumable_role_admin_secrets_operator" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create_role = true
   role_name   = "${var.eks_cluster_name}-secrets-operator"
@@ -84,7 +84,7 @@ module "iam_assumable_role_admin_secrets_operator" {
 ########################
 module "iam_assumable_role_external_dns" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "6.8.0"
 
   create_role = true
   role_name   = "${var.eks_cluster_name}-external-dns"
