@@ -5,9 +5,10 @@ module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create           = !var.enable_eks_auto_mode
-  name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
-  use_name_prefix  = false
+  create          = !var.enable_eks_auto_mode
+  name            = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
+  policy_name     = "VPC_CNI_IPv4-${var.eks_cluster_name}"
+  use_name_prefix = false
 
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv6   = false
@@ -28,10 +29,10 @@ module "irsa-ebs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create = !var.enable_eks_auto_mode
-  name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
-
-  use_name_prefix  = false
+  create          = !var.enable_eks_auto_mode
+  name            = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
+  policy_name     = "EBS-CSI-${var.eks_cluster_name}"
+  use_name_prefix = false
 
   policies = {
     ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -51,10 +52,10 @@ module "irsa-efs-csi" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create = var.enable_efs_csi
-  name   = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
-
-  use_name_prefix  = false
+  create          = var.enable_efs_csi
+  name            = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
+  policy_name     = "EFS-CSI-${var.eks_cluster_name}"
+  use_name_prefix = false
 
   policies = {
     efs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
@@ -74,10 +75,10 @@ module "iam_assumable_role_admin_secrets_operator" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create = true
-  name   = "${var.eks_cluster_name}-secrets-operator"
-
-  use_name_prefix  = false
+  create          = true
+  name            = "${var.eks_cluster_name}-secrets-operator"
+  policy_name     = "${var.eks_cluster_name}-secrets-operator"
+  use_name_prefix = false
 
   policies = {
     eso_policy = aws_iam_policy.secrets_operator.arn
@@ -97,10 +98,10 @@ module "iam_assumable_role_external_dns" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "6.8.0"
 
-  create = true
-  name   = "${var.eks_cluster_name}-external-dns"
-
-  use_name_prefix  = false
+  create          = true
+  name            = "${var.eks_cluster_name}-external-dns"
+  policy_name     = "${var.eks_cluster_name}-external-dns"
+  use_name_prefix = false
 
   policies = {
     external_dns_policy = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
