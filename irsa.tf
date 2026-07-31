@@ -2,10 +2,14 @@
 #IRSA for VPC-CNI addon for EKS #
 #################################
 module "vpc_cni_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
 
-  role_name             = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
+  create          = !var.enable_eks_auto_mode
+  name            = "AmazonEKS-VPC-CNI-${var.eks_cluster_name}"
+  policy_name     = "VPC_CNI_IPv4-${var.eks_cluster_name}"
+  use_name_prefix = false
+
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv6   = false
   vpc_cni_enable_ipv4   = true
@@ -22,12 +26,15 @@ module "vpc_cni_irsa" {
 #IRSA for EBS-CSI addon for EKS #
 #################################
 module "irsa-ebs-csi" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
 
-  create_role = true
-  role_name   = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
-  role_policy_arns = {
+  create          = !var.enable_eks_auto_mode
+  name            = "AmazonEKS-EBS-CSI-${var.eks_cluster_name}"
+  policy_name     = "EBS-CSI-${var.eks_cluster_name}"
+  use_name_prefix = false
+
+  policies = {
     ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   }
   oidc_providers = {
@@ -38,16 +45,42 @@ module "irsa-ebs-csi" {
   }
 }
 
+#################################
+#IRSA for EFS-CSI addon for EKS #
+#################################
+module "irsa-efs-csi" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
+
+  create          = var.enable_efs_csi
+  name            = "AmazonEKS-EFS-CSI-${var.eks_cluster_name}"
+  policy_name     = "EFS-CSI-${var.eks_cluster_name}"
+  use_name_prefix = false
+
+  policies = {
+    efs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+  }
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:efs-csi-controller-sa"]
+    }
+  }
+}
+
 #####################################
 #IRSA for External Secrets Operator #
 #####################################
 module "iam_assumable_role_admin_secrets_operator" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
 
-  create_role = true
-  role_name   = "${var.eks_cluster_name}-secrets-operator"
-  role_policy_arns = {
+  create          = true
+  name            = "${var.eks_cluster_name}-secrets-operator"
+  policy_name     = "${var.eks_cluster_name}-secrets-operator"
+  use_name_prefix = false
+
+  policies = {
     eso_policy = aws_iam_policy.secrets_operator.arn
   }
   oidc_providers = {
@@ -62,12 +95,15 @@ module "iam_assumable_role_admin_secrets_operator" {
 #IRSA for External DNS #
 ########################
 module "iam_assumable_role_external_dns" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
 
-  create_role = true
-  role_name   = "${var.eks_cluster_name}-external-dns"
-  role_policy_arns = {
+  create          = true
+  name            = "${var.eks_cluster_name}-external-dns"
+  policy_name     = "${var.eks_cluster_name}-external-dns"
+  use_name_prefix = false
+
+  policies = {
     external_dns_policy = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
   }
   oidc_providers = {
@@ -114,12 +150,15 @@ EOT
 ##########################
 module "iam_assumable_role_admin_aws_load_balancer_controller" {
 
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "6.8.0"
 
-  create_role = true
-  role_name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
-  role_policy_arns = {
+  create = true
+  name   = "aws-load-balancer-controller-${var.eks_cluster_name}"
+
+  use_name_prefix  = false
+
+  policies = {
     alb_controller_policy = aws_iam_policy.aws_load_balancer_controller.arn
   }
   oidc_providers = {
@@ -166,6 +205,9 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 "ec2:DescribeTags",
                 "ec2:GetCoipPoolUsage",
                 "ec2:DescribeCoipPools",
+                "ec2:GetSecurityGroupsForVpc",
+                "ec2:DescribeIpamPools",
+                "ec2:DescribeRouteTables",
                 "elasticloadbalancing:DescribeLoadBalancers",
                 "elasticloadbalancing:DescribeLoadBalancerAttributes",
                 "elasticloadbalancing:DescribeListeners",
@@ -175,7 +217,10 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 "elasticloadbalancing:DescribeTargetGroups",
                 "elasticloadbalancing:DescribeTargetGroupAttributes",
                 "elasticloadbalancing:DescribeTargetHealth",
-                "elasticloadbalancing:DescribeTags"
+                "elasticloadbalancing:DescribeTags",
+                "elasticloadbalancing:DescribeTrustStores",
+                "elasticloadbalancing:DescribeListenerAttributes",
+                "elasticloadbalancing:DescribeCapacityReservation"
             ],
             "Resource": "*"
         },
@@ -324,7 +369,10 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 "elasticloadbalancing:DeleteLoadBalancer",
                 "elasticloadbalancing:ModifyTargetGroup",
                 "elasticloadbalancing:ModifyTargetGroupAttributes",
-                "elasticloadbalancing:DeleteTargetGroup"
+                "elasticloadbalancing:DeleteTargetGroup",
+                "elasticloadbalancing:ModifyListenerAttributes",
+                "elasticloadbalancing:ModifyCapacityReservation",
+                "elasticloadbalancing:ModifyIpPools"
             ],
             "Resource": "*",
             "Condition": {
@@ -370,7 +418,8 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
                 "elasticloadbalancing:ModifyListener",
                 "elasticloadbalancing:AddListenerCertificates",
                 "elasticloadbalancing:RemoveListenerCertificates",
-                "elasticloadbalancing:ModifyRule"
+                "elasticloadbalancing:ModifyRule",
+                "elasticloadbalancing:SetRulePriorities"
             ],
             "Resource": "*"
         }
@@ -378,4 +427,3 @@ resource "aws_iam_policy" "aws_load_balancer_controller" {
 }
 EOT
 }
-

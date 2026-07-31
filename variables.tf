@@ -16,6 +16,18 @@ variable "environment" {
   description = "Environment in which resources are deployed"
 }
 
+variable "project_name" {
+  type        = string
+  description = "Name of the project, client, or product used to tag EKS Auto Mode nodes"
+  default     = ""
+}
+
+variable "allow_long_names" {
+  type        = string
+  default     = true
+  description = "Allows longer IAM role names without suffixes. Leave true for new clusters. Set to false for pre-existing clusters to avoid re-creation."
+}
+
 ################################################################################
 # Networking variables
 ################################################################################
@@ -71,13 +83,51 @@ variable "cluster_log_retention_in_days" {
   default     = 14
 }
 
+variable "enable_eks_auto_mode" {
+  type        = bool
+  description = "Enable EKS Auto Mode instead of the managed node group and standard EKS add-ons"
+  default     = false
+}
+
+variable "enable_efs_csi" {
+  type        = bool
+  description = "Enable EFS CSI EKS managed addon and its IRSA role"
+  default     = false
+}
+
 variable "addons_versions" {
+  description = "Configuration of the standard EKS add-ons; versions are required when EKS Auto Mode is disabled"
   type = object({
-    kube_proxy = string
-    vpc_cni    = string
-    coredns    = string
-    ebs_csi    = string
+    kube_proxy                  = optional(string)
+    vpc_cni                     = optional(string)
+    coredns                     = optional(string)
+    ebs_csi                     = optional(string)
+    efs_csi                     = optional(string)
+    resolve_conflicts_on_create = optional(string, "OVERWRITE")
   })
+  default = null
+
+  validation {
+    condition = var.enable_eks_auto_mode || try(alltrue([
+      for version in [
+        var.addons_versions.kube_proxy,
+        var.addons_versions.vpc_cni,
+        var.addons_versions.coredns,
+        var.addons_versions.ebs_csi,
+      ] : length(trimspace(version)) > 0
+    ]), false)
+    error_message = "Normal mode requires non-empty kube_proxy, vpc_cni, coredns, and ebs_csi versions."
+  }
+
+  validation {
+    condition     = !var.enable_efs_csi || try(length(trimspace(var.addons_versions.efs_csi)) > 0, false)
+    error_message = "enable_efs_csi requires a non-empty efs_csi version."
+  }
+
+  validation {
+    condition     = try(contains(["NONE", "OVERWRITE"], var.addons_versions.resolve_conflicts_on_create), true)
+    error_message = "addons_versions.resolve_conflicts_on_create must be one of: NONE, OVERWRITE."
+  }
 }
 
 variable "eks_tags" {
@@ -108,7 +158,7 @@ variable "access_entries" {
 variable "eks_ami_type" {
   description = "Default AMI type for the EKS worker nodes"
   type        = string
-  default     = "AL2_x86_64"
+  default     = "BOTTLEROCKET_x86_64"
 }
 
 variable "eks_disk_size" {
@@ -165,6 +215,12 @@ variable "eks_ng_capacity_type" {
   description = "capacity type for node group nodes"
   type        = string
   default     = "SPOT"
+}
+
+variable "karpenter_allowed_instance_types" {
+  description = "Optional instance types allowed by the EKS Auto Mode NodePool; an empty list applies no instance type restriction"
+  type        = list(string)
+  default     = []
 }
 
 variable "kms_key_enable_default_policy" {
