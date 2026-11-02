@@ -62,7 +62,7 @@ variable "eks_cluster_name" {
 variable "eks_cluster_version" {
   type        = string
   description = "Desired Kubernetes cluster version"
-  default     = "1.35"
+  default     = "1.36"
 }
 
 variable "cluster_endpoint_public_access_cidrs" {
@@ -98,11 +98,11 @@ variable "enable_efs_csi" {
 variable "addons_versions" {
   description = "Configuration of the standard EKS add-ons. Defaults match the default eks_cluster_version; override any subset, unset entries keep their default"
   type = object({
-    kube_proxy                  = optional(string, "v1.35.3-eksbuild.21")
-    vpc_cni                     = optional(string, "v1.22.4-eksbuild.3")
-    coredns                     = optional(string, "v1.13.2-eksbuild.21")
-    ebs_csi                     = optional(string, "v1.65.0-eksbuild.1")
-    efs_csi                     = optional(string, "v3.4.2-eksbuild.1")
+    kube_proxy                  = optional(string, "v1.36.0-eksbuild.58")
+    vpc_cni                     = optional(string, "v1.23.2-eksbuild.8")
+    coredns                     = optional(string, "v1.14.7-eksbuild.22")
+    ebs_csi                     = optional(string, "v1.67.2-eksbuild.1")
+    efs_csi                     = optional(string, "v3.5.3-eksbuild.1")
     resolve_conflicts_on_create = optional(string, "OVERWRITE")
   })
   default = {}
