@@ -35,7 +35,7 @@ module "irsa-ebs-csi" {
   use_name_prefix = false
 
   policies = {
-    ebs_csi_policy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverEKSClusterScopedPolicy"
+    ebs_csi_policy = "arn:aws:iam::aws:policy/AmazonEBSCSIDriverPolicyV2"
   }
   oidc_providers = {
     main = {
